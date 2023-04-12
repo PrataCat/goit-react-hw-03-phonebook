@@ -19,6 +19,20 @@ class App extends Component {
     filter: '',
   };
 
+  componentDidMount() {
+    const contactsFromLS = localStorage.getItem(KEY_PHONEBOOK);
+    const contactsArr = JSON.parse(contactsFromLS);
+    if (contactsArr) {
+      this.setState({ contacts: contactsArr });
+    }
+  }
+
+  componentDidUpdate(prevState) {
+    if (prevState !== this.state) {
+      localStorage.setItem('contacts', JSON.stringify(this.state.contacts));
+    }
+  }
+
   saveContact = data => {
     const { name, number } = data;
     if (this.state.contacts.some(el => el.name === data.name)) {
@@ -52,20 +66,6 @@ class App extends Component {
       contacts: prevState.contacts.filter(contact => contact.id !== id),
     }));
   };
-
-  componentDidMount() {
-    const contactsFromLS = localStorage.getItem(KEY_PHONEBOOK);
-    const contactsArr = JSON.parse(contactsFromLS);
-    if (contactsArr) {
-      this.setState({ contacts: contactsArr });
-    }
-  }
-
-  componentDidUpdate(prevState) {
-    if (prevState !== this.state) {
-      localStorage.setItem('contacts', JSON.stringify(this.state.contacts));
-    }
-  }
 
   render() {
     return (
